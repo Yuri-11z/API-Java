@@ -1,8 +1,11 @@
 package com.example.demo.doMain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import java.util.Date;
 import java.util.List;
 
@@ -16,16 +19,30 @@ public class Livro {
 
     private String nome;
 
+    @JsonFormat(pattern = "dd/MM/yyy")
+    @JsonInclude(Include.NON_NULL)
     private Date publicacao;
 
+    @JsonInclude(Include.NON_NULL)
     private String editora;
 
+    @JsonInclude(Include.NON_NULL)
     private String resumo;
 
-    @Transient
+    @OneToMany(mappedBy = "livro")
     private List<Comentario> comentarios;
 
-    private String autor;
+    @ManyToOne
+    @JoinColumn(name = "AUTOR_ID")
+    private Autor autor;
+
+    public Autor getAutor() {
+        return autor;
+    }
+
+    public void setAutor(Autor autor) {
+        this.autor = autor;
+    }
 
     public Livro(){}
 
@@ -72,15 +89,6 @@ public class Livro {
     public void setComentarios(List<Comentario> comentarios) {
         this.comentarios = comentarios;
     }
-
-    public String getAutor() {
-        return autor;
-    }
-
-    public void setAutor(String autor) {
-        this.autor = autor;
-    }
-
 
     public String getNome() {
         return nome;

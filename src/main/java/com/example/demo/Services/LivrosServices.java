@@ -1,13 +1,17 @@
 package com.example.demo.Services;
 
+
 import java.util.List;
 import java.util.Optional;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.repository.ComentariosRepository;
 import com.example.demo.repository.LivrosRepository;
 import com.example.demo.ExcecoesServices.LivrosNaoEncontrados;
+import com.example.demo.doMain.Comentario;
 import com.example.demo.doMain.Livro;
 
 
@@ -17,6 +21,9 @@ public class LivrosServices {
 
      @Autowired
     private LivrosRepository livrosRepository;
+    
+    @Autowired
+    private ComentariosRepository comentariosRepository;
 
     public List <Livro> listar()
     {
@@ -67,5 +74,21 @@ public class LivrosServices {
     private void verificarExistencia(Livro livro)
     {
         buscar(livro.getId());
+    }
+
+    public Comentario salvarComentario(Long livroId, Comentario comentario)
+    {
+        Livro livro = buscar(livroId);
+        comentario.setLivro(livro);
+        comentario.setData(new Date());
+
+        return comentariosRepository.save(comentario);
+
+    }
+
+    public List<Comentario> listaComentarios(Long livroId){
+        Livro livro = buscar(livroId);
+
+        return livro.getComentarios();
     }
 }

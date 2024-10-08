@@ -3,9 +3,7 @@ package com.example.demo.Resources;
 import java.net.URI;
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,13 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import com.example.demo.ExcecoesServices.LivrosNaoEncontrados;
 import com.example.demo.Services.LivrosServices;
+import com.example.demo.doMain.Comentario;
 import com.example.demo.doMain.Livro;
-import com.example.demo.repository.LivrosRepository;
+
 
 @RestController
 @RequestMapping("/livros")
@@ -69,5 +65,23 @@ public class LivrosResources {
         livro.setId(id);
         livrosServices.atualizar(livro);
         return ResponseEntity.noContent().build();
+    }
+
+    @RequestMapping(value = "/{id}/comentarios", method = RequestMethod.POST)
+    public ResponseEntity<Void> adicionarComentario(@PathVariable("id") Long livroId, @RequestBody Comentario comentario)
+    {
+        livrosServices.salvarComentario(livroId, comentario);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
+
+        return ResponseEntity.created(uri).build();
+    }
+
+    @RequestMapping(value = "/{id}/comentarios", method = RequestMethod.GET)
+    public ResponseEntity<List<Comentario>> listarComentarios(@PathVariable ("id")Long livroId){
+
+        List<Comentario> comentarios = livrosServices.listaComentarios(livroId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(comentarios);
     }
 }
