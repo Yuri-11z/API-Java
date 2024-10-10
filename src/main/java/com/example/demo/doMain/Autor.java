@@ -8,11 +8,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 
 @Entity
 public class Autor {
@@ -20,17 +23,21 @@ public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String nome;
+    
+    
+    @NotEmpty(message = "o nome nao pode ser nulo.")
+    private String nome; 
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     @JsonInclude(Include.NON_NULL)
+    @NotNull()
     private Date nascimento;
     
     @JsonInclude(Include.NON_NULL)
     private String nacionalidade;
     
     @OneToMany(mappedBy = "autor")
+    @JsonIgnore
     private List<Livro> livros;
     
     public List<Livro> getLivros() {

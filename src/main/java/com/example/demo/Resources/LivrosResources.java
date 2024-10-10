@@ -2,8 +2,10 @@ package com.example.demo.Resources;
 
 import java.net.URI;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +49,8 @@ public class LivrosResources {
     public ResponseEntity<?> Buscar(@PathVariable ("id") Long id)
     {
         Livro livro = livrosServices.buscar(id);
-        return ResponseEntity.status(HttpStatus.OK).body(livro);
+        CacheControl controlarCache = CacheControl.maxAge(20, TimeUnit.SECONDS);
+        return ResponseEntity.status(HttpStatus.OK).cacheControl(controlarCache).body(livro);
     }
 
 

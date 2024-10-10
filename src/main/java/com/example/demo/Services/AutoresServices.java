@@ -1,9 +1,9 @@
 package com.example.demo.Services;
 
-import java.security.cert.PKIXRevocationChecker.Option;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +31,12 @@ public class AutoresServices {
                 throw new AutoresExistentes("O autor já existe!");
             }
         }
+
+        if(autor.getNome() == null || StringUtils.isBlank(autor.getNome()))
+        {
+            throw new AutoresExistentes("O nome não pode ser nulo");
+        }
+
         return autoresRepository.save(autor);   
     }
 
